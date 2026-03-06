@@ -46,7 +46,7 @@ except Exception:
     LGBMClassifier = None
 
 # Paths
-DEFAULT_TRAIN_PATH = "/mnt/data/aug_train.csv"
+DEFAULT_TRAIN_PATH = "aug_train.csv"
 MODEL_SAVE_PATH = "./best_employee_retention_model.joblib"
 
 # Streamlit basic config
@@ -193,18 +193,11 @@ def load_csv(uploaded, default_path):
 # -------------------------------------------------------------------
 st.sidebar.header("Data & Model Options")
 uploaded_train = st.sidebar.file_uploader("Upload train CSV (with 'target')", type=["csv"])
-uploaded_model = st.sidebar.file_uploader("Upload trained pipeline (.joblib)", type=["joblib", "pkl"])
+#uploaded_model = st.sidebar.file_uploader("Upload trained pipeline (.joblib)", type=["joblib", "pkl"])
 
 train_df = load_csv(uploaded_train, DEFAULT_TRAIN_PATH)
 
-loaded_pipeline = None
-if uploaded_model is not None:
-    try:
-        uploaded_model.seek(0)
-        loaded_pipeline = joblib.load(uploaded_model)
-        st.sidebar.success("Uploaded pipeline loaded.")
-    except Exception as e:
-        st.sidebar.error(f"Failed to load pipeline: {e}")
+
 
 # -------------------------------------------------------------------
 # 4. Dataset preview & basic EDA
@@ -448,7 +441,7 @@ if st.button("Train & Compare Models"):
 # -------------------------------------------------------------------
 st.subheader("Single Profile Prediction")
 
-pipeline_for_prediction = loaded_pipeline
+pipeline_for_prediction = None
 if pipeline_for_prediction is None and os.path.exists(MODEL_SAVE_PATH):
     try:
         pipeline_for_prediction = joblib.load(MODEL_SAVE_PATH)
@@ -573,4 +566,5 @@ st.markdown(
 - SMOTE is used inside the pipeline to handle class imbalance.
 - The app provides: EDA, model comparison, performance visualization, and single-profile prediction.
 """
+
 )
